@@ -33,9 +33,10 @@ export function getBackdropUrl(
 async function tmdbFetch<T>(endpoint: string, queryParams: Record<string, string | number> = {}): Promise<T | null> {
   const apiKey = process.env.TMDB_API_KEY;
   const apiToken = process.env.TMDB_READ_ACCESS_TOKEN;
+  const useMockOnly = process.env.USE_MOCK_DATA === "true";
 
-  // If no API key configured, return null to activate seamless fallback mock data
-  if (!apiKey && !apiToken) {
+  // If mock only mode or no API key configured, return null to activate fallback mock data
+  if (useMockOnly || (!apiKey && !apiToken)) {
     return null;
   }
 
@@ -60,10 +61,16 @@ async function tmdbFetch<T>(endpoint: string, queryParams: Record<string, string
   }
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+
     const res = await fetch(url.toString(), {
       headers,
+      signal: controller.signal,
       next: { revalidate: 3600 }, // Cache 1 hour
     });
+
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
       console.warn(`TMDB API response not OK [${res.status}] for ${endpoint}`);
