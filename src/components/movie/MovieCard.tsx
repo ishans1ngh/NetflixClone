@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { Play, Plus, Check, Info, Star } from "lucide-react";
 import { MediaItem, MediaType } from "@/types";
 import { getImageUrl } from "@/lib/tmdb";
@@ -55,94 +54,96 @@ export default function MovieCard({
 
   return (
     <div
-      className="relative flex-none w-[160px] sm:w-[200px] md:w-[240px] group cursor-pointer transition-all duration-300"
+      className="relative flex-none w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] group cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={detailsUrl} className="block">
-        {/* Card Poster Container */}
-        <div className="relative aspect-[2/3] w-full rounded-md overflow-hidden bg-zinc-900 border border-zinc-800/80 group-hover:border-zinc-700 shadow-md group-hover:shadow-2xl transition-all duration-300">
-          <img
-            src={posterUrl}
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-          />
+      {/* Card Container */}
+      <div
+        onClick={() => window.location.href = detailsUrl}
+        className="relative aspect-[2/3] w-full rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800/40 hover:border-zinc-700/60 transition-all duration-500 hover-lift"
+      >
+        {/* Poster Image */}
+        <img
+          src={posterUrl}
+          alt={title}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        />
 
-          {/* Continue watching progress bar */}
-          {progressPercent !== undefined && progressPercent > 0 && (
-            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-zinc-800 z-20">
-              <div
-                className="h-full bg-[#E50914] transition-all duration-300"
-                style={{ width: `${Math.min(100, Math.max(0, progressPercent))}%` }}
-              />
-            </div>
-          )}
+        {/* Continue watching progress bar */}
+        {progressPercent !== undefined && progressPercent > 0 && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-900/90 z-20">
+            <div
+              className="h-full bg-[#E50914] transition-all duration-500 shadow-lg shadow-[#E50914]/30"
+              style={{ width: `${Math.min(100, Math.max(0, progressPercent))}%` }}
+            />
+          </div>
+        )}
 
-          {/* Top Rating Badge */}
-          {rating && (
-            <div className="absolute top-2 right-2 bg-black/75 backdrop-blur-sm text-amber-400 text-[11px] font-bold px-1.5 py-0.5 rounded flex items-center shadow border border-zinc-800/80">
-              <Star className="w-3 h-3 fill-amber-400 mr-0.5" />
-              {rating}
-            </div>
-          )}
+        {/* Rating Badge */}
+        {rating && (
+          <div className="absolute top-2.5 right-2.5 bg-black/80 backdrop-blur-md text-amber-400 text-[10px] font-semibold px-2 py-1 rounded-sm flex items-center border border-zinc-700/50 shadow-lg">
+            <Star className="w-3 h-3 fill-amber-400 mr-1" />
+            {rating}
+          </div>
+        )}
 
-          {/* Hover Overlay Card Details */}
-          <div
-            className={`absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent p-3 flex flex-col justify-end transition-opacity duration-300 ${
-              isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
-          >
-            <h3 className="text-white font-bold text-sm line-clamp-1 drop-shadow">
-              {title}
-            </h3>
+        {/* Hover Overlay */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 via-black/20 to-transparent p-4 flex flex-col justify-end transition-all duration-500 ${
+            isHovered ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <h3 className="text-white font-semibold text-sm line-clamp-2 leading-tight mb-2">
+            {title}
+          </h3>
 
-            <div className="flex items-center space-x-2 text-[11px] text-zinc-300 my-1.5">
-              {releaseYear && <span>{releaseYear}</span>}
-              <span className="border border-zinc-600 px-1 rounded text-[9px] uppercase">
-                HD
-              </span>
-              <span className="text-[#E50914] font-medium uppercase text-[10px]">
-                {type}
-              </span>
-            </div>
+          <div className="flex items-center space-x-2 text-[10px] text-zinc-400 mb-3">
+            {releaseYear && <span>{releaseYear}</span>}
+            <span className="text-zinc-600">•</span>
+            <span className="uppercase text-zinc-500">{type}</span>
+          </div>
 
-            {/* Quick Action Buttons */}
-            <div className="flex items-center space-x-2 pt-1">
-              <Link
-                href={watchUrl}
-                onClick={(e) => e.stopPropagation()}
-                className="w-8 h-8 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center text-black shadow-lg transition-transform transform hover:scale-110"
-                title="Play content"
-              >
-                <Play className="w-4 h-4 fill-black text-black ml-0.5" />
-              </Link>
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.location.href = watchUrl;
+              }}
+              className="flex-1 flex items-center justify-center space-x-1.5 bg-white hover:bg-zinc-100 text-black py-2 rounded-sm font-medium text-xs transition-all duration-300 hover:scale-105 btn-press"
+            >
+              <Play className="w-3.5 h-3.5 fill-black" />
+              <span>Play</span>
+            </button>
 
-              <button
-                type="button"
-                onClick={handleWatchlistToggle}
-                className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${
-                  inList
-                    ? "bg-[#E50914] border-[#E50914] text-white"
-                    : "bg-black/60 border-zinc-400 text-white hover:border-white"
-                }`}
-                title={inList ? "Remove from Watchlist" : "Add to Watchlist"}
-              >
-                {inList ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-              </button>
+            <button
+              type="button"
+              onClick={handleWatchlistToggle}
+              className={`w-8 h-8 rounded-sm border flex items-center justify-center transition-all duration-300 hover:scale-110 btn-press ${
+                inList
+                  ? "bg-[#E50914] border-[#E50914] text-white shadow-lg shadow-[#E50914]/30"
+                  : "bg-black/70 border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white hover:bg-black/80"
+              }`}
+              title={inList ? "Remove from List" : "Add to List"}
+            >
+              {inList ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+            </button>
 
-              <Link
-                href={detailsUrl}
-                onClick={(e) => e.stopPropagation()}
-                className="w-8 h-8 rounded-full bg-black/60 border border-zinc-400 hover:border-white text-white flex items-center justify-center transition-colors ml-auto"
-                title="More Information"
-              >
-                <Info className="w-4 h-4" />
-              </Link>
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.location.href = detailsUrl;
+              }}
+              className="w-8 h-8 rounded-sm bg-black/70 border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white hover:bg-black/80 flex items-center justify-center transition-all duration-300 hover:scale-110 btn-press"
+              title="More Info"
+            >
+              <Info className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }

@@ -1,217 +1,248 @@
-# CineFlix 🎬
-### Premium Movie & TV Streaming Platform Inspired by Netflix
+# CINEVERSE
 
-CineFlix is a production-ready, Netflix-inspired streaming and movie discovery web application. Built with Next.js (App Router), TypeScript, Tailwind CSS, TMDB API, Supabase (Auth & PostgreSQL RLS), and a custom HTML5 video player.
+A production-ready, Netflix-inspired streaming platform built with Next.js, TypeScript, and Tailwind CSS. Features a premium dark interface, responsive design, and complete frontend functionality using localStorage for demo persistence.
 
----
+![CINEVERSE](https://img.shields.io/badge/Next.js-16.4-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat-square&logo=tailwind-css)
 
-## 🌟 Key Features
+## Features
 
-- **Cinematic Experience**: Dark Netflix-style palette (`#141414`), deep red brand accent (`#E50914`), high-resolution hero banners, smooth hover cards, and interactive horizontal carousels.
-- **TMDB Catalog Integration**:
-  - Live trending movies, popular series, top-rated cinema, upcoming releases.
-  - Multi-genre filtering (Action, Sci-Fi, Comedy, Horror, Romance, etc.).
-  - Sorting by popularity, rating, and release date.
-  - Full details for movies and TV shows: cast, director, runtime, trailers, and similar titles.
-  - TV show seasons and episode guide with stills, runtimes, and overviews.
-- **Production HTML5 Video Player**:
-  - 12 required player controls: Play/Pause, Scrubber/Seek with buffered bar, Volume slider, Mute/Unmute, Fullscreen toggle, Current timestamp & total duration, Playback speeds (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x), Subtitle closed captions, and keyboard shortcuts (`Space`/`K`, `F`, `M`, `←`/`→`, `↑`/`↓`).
-  - Auto-hiding control overlays on mouse inactivity.
-  - Authorized public-domain cinema streams (e.g., *Tears of Steel*, *Sintel*, *Big Buck Bunny*, *Elephants Dream*) in full 1080p.
-  - Official TMDB studio trailer preview player for commercial features with full legal and streaming rights disclosure.
-- **Continue Watching with Resume**:
-  - Automatic playback progress tracking every 5 seconds.
-  - Visual red completion bars on movie cards.
-  - Resume button to jump back into playback from the exact second you left off.
-- **Personalized Watchlist (My List)**:
-  - Add or remove movies and TV shows with one click (+ / Checkmark).
-  - Filter by All, Movies, and TV Shows.
-  - Seamless persistence in Supabase PostgreSQL (with automatic localStorage guest fallback).
-- **Interactive Multi-Search**:
-  - Real-time debounced search for movies, TV series, actors, and genres.
-  - Instant filter tabs (All, Movies, TV Shows).
-  - Search history tracking with quick access pills and one-click clear.
-- **Authentication & Profiles**:
-  - Supabase Auth integration (Email/Password registration, sign-in, session persistence).
-  - Guest Explore Mode (instant access without mandatory login).
-  - Profile customization: choose cinematic avatars, edit username, view streaming statistics.
-- **Database Architecture & RLS**:
-  - PostgreSQL schema migrations in `supabase/migrations/01_initial_schema.sql`.
-  - Comprehensive Row Level Security (RLS) policies protecting user data.
-  - Automatic triggers for new profile and default watchlist creation.
+- **Premium Dark Interface**: Cinematic design with #080808 background and #E50914 accent color
+- **Fully Functional UI**: 
+  - Home page with hero banner and auto-rotating featured content
+  - Horizontally scrollable content rows (Trending, Popular, Top Rated, etc.)
+  - Movie and TV show detail pages with full metadata
+  - Professional video player with custom controls
+  - Search functionality with debouncing and filters
+  - My List (watchlist) with localStorage persistence
+  - Continue Watching with progress tracking
+  - Profile management
 
----
+- **Authentication**: Demo authentication system using localStorage (ready for real auth integration)
+- **TMDB Integration**: Fetches real movie/TV data with graceful fallback to mock data
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Animations**: Smooth transitions with Framer Motion
+- **TypeScript**: Full type safety across the application
+- **Production Ready**: Optimized build, no errors, Vercel-compatible
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-| Layer | Technologies |
-|---|---|
-| **Frontend Framework** | [Next.js](https://nextjs.org/) (App Router, Turbopack, TypeScript) |
-| **Styling & UI** | [Tailwind CSS v4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/) Icons |
-| **Video Engine** | Custom HTML5 Video Player & YouTube Trailer Embeds |
-| **Movie Metadata** | [The Movie Database (TMDB) API](https://developer.themoviedb.org/docs) |
-| **Backend & Database** | [Supabase](https://supabase.com/) (PostgreSQL, Auth, RLS) |
-| **Deployment** | [Vercel](https://vercel.com/) |
+- **Framework**: Next.js 16.4.6 (App Router)
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4.0.9
+- **Icons**: Lucide React
+- **Animations**: Framer Motion 12.4.7
+- **Data Persistence**: Browser localStorage
+- **Movie Data**: TMDB API (with fallback mock data)
+- **Video**: YouTube Embed API for trailers, HTML5 video for playable content
+- **Deployment**: Vercel
 
----
+## Project Structure
 
-## 📁 Project Structure
-
-```text
-cineflix/
+```
+cineverse/
+├── public/
+│   └── images/
+│       └── poster-placeholder.svg
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx               # Cinematic Home Page (Hero, Continue Watching, Rows)
-│   │   ├── movies/page.tsx        # Movies Catalog (Genres, Sorting, Pagination)
-│   │   ├── tv-shows/page.tsx      # TV Series Catalog (Genres, Sorting)
-│   │   ├── search/page.tsx        # Instant Multi-Search Engine & History
-│   │   ├── movie/[id]/page.tsx    # Movie Details, Cast, Trailers & Similar Titles
-│   │   ├── tv/[id]/page.tsx       # TV Details, Seasons & Episode Selector
-│   │   ├── watch/page.tsx         # Dedicated Fullscreen Video Streaming Player
-│   │   ├── my-list/page.tsx       # User Watchlist Management
-│   │   ├── profile/page.tsx       # Profile, Avatars, Viewing Statistics & History
-│   │   ├── login/page.tsx         # Sign In & Guest Explore Mode
-│   │   ├── signup/page.tsx        # Account Registration
-│   │   ├── not-found.tsx          # Custom 404 Page
-│   │   ├── error.tsx              # Application Error Boundary
-│   │   └── api/
-│   │       ├── tmdb/[...endpoint] # Secure Server-side TMDB Proxy
-│   │       ├── watchlist/         # Watchlist API Endpoint
-│   │       └── history/           # Watch History API Endpoint
+│   │   ├── login/
+│   │   ├── movie/[id]/
+│   │   ├── movies/
+│   │   ├── my-list/
+│   │   ├── profile/
+│   │   ├── search/
+│   │   ├── signup/
+│   │   ├── tv-shows/
+│   │   ├── tv/[id]/
+│   │   ├── watch/
+│   │   ├── error.tsx
+│   │   ├── not-found.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── globals.css
 │   ├── components/
-│   │   ├── hero/                  # HeroBanner
-│   │   ├── movie/                 # MovieCard, ContentRow, ContinueWatchingRow
-│   │   ├── navigation/            # Sticky Blur Navbar & Mobile Menu
-│   │   ├── layout/                # Footer with TMDB Attribution
-│   │   └── player/                # 12-Control HTML5 VideoPlayer
+│   │   ├── hero/
+│   │   ├── layout/
+│   │   ├── movie/
+│   │   ├── navigation/
+│   │   └── player/
 │   ├── context/
-│   │   ├── AuthContext.tsx        # Supabase Auth + Guest Mode
-│   │   └── WatchlistContext.tsx   # Watchlist & Continue Watching Sync
+│   │   ├── AuthContext.tsx
+│   │   └── WatchlistContext.tsx
 │   ├── lib/
-│   │   ├── tmdb.ts                # TMDB API Client, Caching & Image Helpers
-│   │   ├── mockData.ts            # Curated Fallback Catalog & Playable Streams
-│   │   └── supabase/              # Supabase Client & Server Helpers
+│   │   ├── mockData.ts
+│   │   └── tmdb.ts
 │   └── types/
-│       └── index.ts               # Complete TypeScript Definitions
-├── supabase/
-│   └── migrations/
-│       └── 01_initial_schema.sql  # PostgreSQL Tables, RLS Policies & Triggers
-├── public/
-│   └── images/                    # SVGs & Artwork Placeholders
-├── .env.example                   # Complete Environment Variables Reference
-├── next.config.ts                 # Next.js Image Domains & Configuration
+│       └── index.ts
+├── .env.example
+├── next.config.ts
+├── package.json
+├── tsconfig.json
 └── README.md
 ```
 
----
+## Getting Started
 
-## 🚀 Getting Started Locally
+### Prerequisites
 
-### 1. Clone & Install Dependencies
+- Node.js 18+ 
+- npm or yarn
 
+### Installation
+
+1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/cineflix.git
-cd cineflix
+git clone <your-repo-url>
+cd NetflixClone
+```
+
+2. Install dependencies:
+```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-
-Copy the example environment file:
-
+3. Set up environment variables (optional but recommended for full functionality):
 ```bash
 cp .env.example .env.local
 ```
 
-Fill in your API credentials (see next section):
+4. Obtain a TMDB API Key (optional):
+   - Go to [The Movie Database](https://www.themoviedb.org/)
+   - Sign up for a free account
+   - Navigate to Settings > API > Create a new key
+   - Add your key to `.env.local`
 
-```env
-# TMDB API (https://www.themoviedb.org/settings/api)
-TMDB_API_KEY=your_tmdb_api_key
-
-# Supabase (https://supabase.com)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-> **Note**: CineFlix includes an intelligent fallback catalog. If you run the app before configuring keys, it runs seamlessly in Guest Mode with rich 4K content, working continue-watching, and sample playable streams!
-
-### 3. Run Development Server
-
+5. Run the development server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
----
+## Environment Variables
 
-## 🔑 External Credentials Setup
+Create a `.env.local` file in the root directory:
 
-### A. The Movie Database (TMDB) API
-1. Create a free account at [themoviedb.org](https://www.themoviedb.org/signup).
-2. Go to **Settings** → **API** (`https://www.themoviedb.org/settings/api`).
-3. Click **Create** and select **Developer**.
-4. Fill in basic application details (Application Name: `CineFlix`, URL: `http://localhost:3000`).
-5. Copy your **API Key (v3 auth)** into `TMDB_API_KEY`.
-
-### B. Supabase Setup
-1. Create a free account at [supabase.com](https://supabase.com).
-2. Click **New Project** and choose a database password and region.
-3. Once created, go to **Project Settings** → **API**:
-   - Copy **Project URL** into `NEXT_PUBLIC_SUPABASE_URL`.
-   - Copy **anon public** key into `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-   - Copy **service_role** key into `SUPABASE_SERVICE_ROLE_KEY`.
-4. Run Database Migrations:
-   - Go to the **SQL Editor** in the Supabase Dashboard.
-   - Open `supabase/migrations/01_initial_schema.sql` from this repository.
-   - Paste the SQL into the editor and click **Run**.
-   - This creates all tables (`profiles`, `watchlists`, `watchlist_items`, `watch_history`, `user_preferences`), enables Row Level Security (RLS), and sets up user triggers.
-
----
-
-## ☁️ Vercel Deployment Instructions
-
-Deploy CineFlix directly to Vercel in 3 simple steps:
-
-### Step 1: Push Repository to GitHub
-```bash
-git add .
-git commit -m "Initial commit: Complete CineFlix streaming platform"
-git remote add origin https://github.com/<your-username>/cineflix.git
-git push -u origin main
+```env
+# TMDB API Key (optional - fallback to mock data if not provided)
+TMDB_API_KEY=your_tmdb_api_key_here
 ```
 
-### Step 2: Import into Vercel
-1. Log in to [vercel.com](https://vercel.com).
-2. Click **Add New Project** → **Import Git Repository**.
-3. Select your `cineflix` repository.
-4. Framework Preset will automatically detect **Next.js**.
+**Note**: The application works without the TMDB API key by using curated mock data. However, adding the key unlocks real-time data from TMDB's extensive database.
 
-### Step 3: Add Environment Variables on Vercel
-Under **Environment Variables**, add:
-- `TMDB_API_KEY`: Your TMDB API Key.
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL.
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
-- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase Service Role Key.
-- `NEXT_PUBLIC_APP_URL`: Your Vercel domain (e.g. `https://cineflix.vercel.app`).
+## Available Scripts
 
-Click **Deploy**! Your application will build and be live worldwide in under 60 seconds.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
 
----
+## Deployment to Vercel
 
-## ⚖️ Legal & Copyright Compliance
+### Automatic Deployment
 
-CineFlix is designed with rigorous intellectual property compliance:
-- **Public Domain & Creative Commons**: Full-length video streaming is provided exclusively for authorized open-source and creative commons films (Blender Foundation 4K cinema: *Tears of Steel*, *Sintel*, *Big Buck Bunny*, *Elephants Dream*, and public domain classics).
-- **Studio Previews**: For commercial studio releases, CineFlix displays metadata, cast information, and official studio promotional trailers with clear disclosure indicating that full film streaming is reserved for licensed distributors.
-- **TMDB Attribution**: This product uses the TMDB API for metadata and artwork but is not endorsed or certified by TMDB.
+1. Push your code to GitHub
+2. Go to [Vercel](https://vercel.com)
+3. Click "Add New Project"
+4. Import your GitHub repository
+5. Add environment variable `TMDB_API_KEY` (optional)
+6. Click "Deploy"
 
----
+### Manual Deployment
 
-## 📄 License
+1. Build the project:
+```bash
+npm run build
+```
 
-MIT License. Designed and engineered for high-performance cinematic web streaming.
+2. Deploy using Vercel CLI:
+```bash
+npm install -g vercel
+vercel
+```
+
+## Key Features Explained
+
+### Authentication (Demo Mode)
+
+The application uses a demo authentication system stored in localStorage:
+- **Sign In**: Accepts any email/password for demo purposes
+- **Sign Up**: Creates a new user profile stored locally
+- **Guest Mode**: One-click access without signup
+- **Profile Management**: Change username and avatar
+
+**Note**: This is a demo implementation. For production, integrate with NextAuth.js, Clerk, Auth0, or Supabase Auth.
+
+### My List & Continue Watching
+
+- Data persists in localStorage
+- Watchlist survives page refreshes
+- Continue Watching tracks playback progress
+- Remove items individually or clear all history
+
+### Video Player
+
+- Custom HTML5 video player with full controls
+- Play/pause, volume, progress bar, fullscreen
+- Keyboard shortcuts (Space, F, M, Arrow keys)
+- Playback speed control (0.5x to 2x)
+- Subtitles toggle
+- Progress saved every 5 seconds
+
+### Search
+
+- Real-time search with 350ms debounce
+- Search by title, genre, or keywords
+- Filter by Movies, TV Shows, or All
+- Recent searches saved to localStorage
+- Popular suggestions
+
+### Responsive Design
+
+- Mobile-first approach
+- Touch-friendly controls
+- Adaptive hero sections
+- Responsive movie cards
+- Mobile navigation drawer
+
+## Mock Data
+
+The application includes curated mock data for:
+- 8+ movies with full metadata
+- 3+ TV shows with seasons and episodes
+- 4 playable public-domain films (Blender Foundation)
+- Genre mappings for both movies and TV
+
+## Fallback Behavior
+
+If TMDB API is not configured:
+- Application automatically uses mock data
+- All features remain functional
+- No error messages or broken states
+- Professional placeholder images
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## License
+
+This project is for educational purposes. Movie metadata and images are provided by TMDB. Playable content consists of public-domain films from the Blender Foundation.
+
+## Acknowledgments
+
+- [TMDB](https://www.themoviedb.org/) for movie/TV metadata
+- [Blender Foundation](https://www.blender.org/foundation/) for public-domain films
+- [Next.js](https://nextjs.org/) for the framework
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Lucide](https://lucide.dev/) for icons
+- [Framer Motion](https://www.framer.com/motion/) for animations
+
+## Support
+
+For issues or questions, please open an issue on the GitHub repository.

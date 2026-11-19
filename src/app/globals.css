@@ -2,15 +2,27 @@
 
 @layer base {
   :root {
-    --background: #141414;
+    --background: #080808;
     --foreground: #ffffff;
-    --card: #181818;
+    --card: #0a0a0a;
     --card-foreground: #ffffff;
     --primary: #e50914;
     --primary-foreground: #ffffff;
     --muted: #808080;
-    --muted-foreground: #b3b3b3;
-    --border: #282828;
+    --muted-foreground: #a1a1aa;
+    --border: #1a1a1a;
+    --accent: #1f1f1f;
+    
+    /* Typography */
+    --font-manrope: 'Manrope', sans-serif;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
   }
 
   * {
@@ -21,29 +33,36 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-/* Custom Netflix-style scrollbars */
+/* Custom scrollbar - minimal and elegant */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #141414;
+  background: #080808;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333333;
-  border-radius: 4px;
+  background: #1a1a1a;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e50914;
+  background: #2a2a2a;
 }
 
 /* Hide scrollbar for carousel rows while maintaining scrollability */
@@ -55,7 +74,7 @@
   scrollbar-width: none;
 }
 
-/* Shimmer animation for skeletons */
+/* Refined shimmer animation for skeletons */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -66,26 +85,119 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, #1f1f1f 25%, #2a2a2a 37%, #1f1f1f 63%);
+  background: linear-gradient(90deg, #0a0a0a 25%, #151515 37%, #0a0a0a 63%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
-/* Hero vignette gradient */
-.hero-vignette {
+/* Cinematic gradient overlays */
+.hero-gradient-left {
   background: linear-gradient(
-    180deg,
-    rgba(20, 20, 20, 0.2) 0%,
-    rgba(20, 20, 20, 0.4) 60%,
-    rgba(20, 20, 20, 1) 100%
+    90deg,
+    rgba(8, 8, 8, 0.95) 0%,
+    rgba(8, 8, 8, 0.75) 35%,
+    rgba(8, 8, 8, 0.4) 60%,
+    transparent 100%
   );
 }
 
-.hero-vignette-radial {
-  background: radial-gradient(
-    circle at 80% 30%,
+.hero-gradient-bottom {
+  background: linear-gradient(
+    180deg,
     transparent 0%,
-    rgba(20, 20, 20, 0.6) 50%,
-    rgba(20, 20, 20, 0.95) 90%
+    rgba(8, 8, 8, 0.3) 50%,
+    rgba(8, 8, 8, 0.85) 85%,
+    rgba(8, 8, 8, 1) 100%
   );
 }
+
+/* Subtle fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Cinematic text shadow for readability */
+.cinematic-text-shadow {
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+}
+
+/* Premium glass effect */
+.glass-dark {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Smooth hover transitions */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Smooth page transitions */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-in {
+  animation: pageIn 0.6s ease-out forwards;
+}
+
+/* Staggered children animation */
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-stagger > * {
+  animation: staggerIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+.animate-stagger > *:nth-child(7) { animation-delay: 0.7s; }
+.animate-stagger > *:nth-child(8) { animation-delay: 0.8s; }

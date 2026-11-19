@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { MediaType, WatchHistoryItem, WatchlistItem } from "@/types";
 import { useAuth } from "./AuthContext";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 interface WatchlistContextType {
   watchlist: WatchlistItem[];
@@ -78,66 +77,27 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const [watchHistory, setWatchHistory] = useState<WatchHistoryItem[]>([]);
 
-  // Load initial data from Supabase or localStorage
+  // Load initial data from localStorage
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-
-    if (user && supabase) {
-      // 1. Fetch Watchlist from Supabase
-      supabase
-        .from("watchlists")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle()
-        .then(async ({ data: wlData }) => {
-          if (wlData) {
-            const { data: items } = await supabase
-              .from("watchlist_items")
-              .select("*")
-              .eq("watchlist_id", wlData.id)
-              .order("added_at", { ascending: false });
-
-            if (items) {
-              setWatchlist(items);
-            }
-          }
-        });
-
-      // 2. Fetch Watch History from Supabase
-      supabase
-        .from("watch_history")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("updated_at", { ascending: false })
-        .then(({ data: histData }) => {
-          if (histData && histData.length > 0) {
-            setWatchHistory(histData);
-          } else {
-            setWatchHistory(DEFAULT_SAMPLE_HISTORY);
-          }
-        });
-    } else {
-      // Guest or local storage fallback
-      const savedWl = localStorage.getItem("cineflix_watchlist");
-      if (savedWl) {
-        try {
-          setWatchlist(JSON.parse(savedWl));
-        } catch {
-          setWatchlist([]);
-        }
+    const savedWl = localStorage.getItem("cineverse_watchlist");
+    if (savedWl) {
+      try {
+        setWatchlist(JSON.parse(savedWl));
+      } catch {
+        setWatchlist([]);
       }
+    }
 
-      const savedHist = localStorage.getItem("cineflix_watch_history");
-      if (savedHist) {
-        try {
-          setWatchHistory(JSON.parse(savedHist));
-        } catch {
-          setWatchHistory(DEFAULT_SAMPLE_HISTORY);
-        }
-      } else {
+    const savedHist = localStorage.getItem("cineverse_watch_history");
+    if (savedHist) {
+      try {
+        setWatchHistory(JSON.parse(savedHist));
+      } catch {
         setWatchHistory(DEFAULT_SAMPLE_HISTORY);
-        localStorage.setItem("cineflix_watch_history", JSON.stringify(DEFAULT_SAMPLE_HISTORY));
       }
+    } else {
+      setWatchHistory(DEFAULT_SAMPLE_HISTORY);
+      localStorage.setItem("cineverse_watch_history", JSON.stringify(DEFAULT_SAMPLE_HISTORY));
     }
   }, [user]);
 
@@ -173,30 +133,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
 
     const updatedList = [newItem, ...watchlist];
     setWatchlist(updatedList);
-
-    const supabase = getSupabaseBrowserClient();
-    if (user && supabase) {
-      const { data: wlData } = await supabase
-        .from("watchlists")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (wlData) {
-        await supabase.from("watchlist_items").insert({
-          watchlist_id: wlData.id,
-          content_id: item.content_id,
-          content_type: item.content_type,
-          title: item.title,
-          poster_path: item.poster_path,
-          backdrop_path: item.backdrop_path,
-          vote_average: item.vote_average,
-          release_date: item.release_date,
-        });
-      }
-    } else {
-      localStorage.setItem("cineflix_watchlist", JSON.stringify(updatedList));
-    }
+    localStorage.setItem("cineverse_watchlist", JSON.stringify(updatedList));
   };
 
   const removeFromWatchlist = async (contentId: number, contentType: MediaType) => {
@@ -204,26 +141,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
       (item) => !(item.content_id === contentId && item.content_type === contentType)
     );
     setWatchlist(updated);
-
-    const supabase = getSupabaseBrowserClient();
-    if (user && supabase) {
-      const { data: wlData } = await supabase
-        .from("watchlists")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (wlData) {
-        await supabase
-          .from("watchlist_items")
-          .delete()
-          .eq("watchlist_id", wlData.id)
-          .eq("content_id", contentId)
-          .eq("content_type", contentType);
-      }
-    } else {
-      localStorage.setItem("cineflix_watchlist", JSON.stringify(updated));
-    }
+    localStorage.setItem("cineverse_watchlist", JSON.stringify(updated));
   };
 
   const saveProgress = async (item: {
@@ -264,29 +182,7 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
     }
     updatedHistory = [updatedItem, ...updatedHistory];
     setWatchHistory(updatedHistory);
-
-    const supabase = getSupabaseBrowserClient();
-    if (user && supabase) {
-      await supabase.from("watch_history").upsert(
-        {
-          user_id: user.id,
-          content_id: item.content_id,
-          content_type: item.content_type,
-          title: item.title,
-          poster_path: item.poster_path,
-          backdrop_path: item.backdrop_path,
-          progress_seconds: Math.floor(item.progress_seconds),
-          duration_seconds: Math.floor(item.duration_seconds),
-          episode_title: item.episode_title,
-          season_number: item.season_number,
-          episode_number: item.episode_number,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id, content_id, content_type" }
-      );
-    } else {
-      localStorage.setItem("cineflix_watch_history", JSON.stringify(updatedHistory));
-    }
+    localStorage.setItem("cineverse_watch_history", JSON.stringify(updatedHistory));
   };
 
   const getProgress = (contentId: number, contentType: MediaType) => {
@@ -300,28 +196,12 @@ export function WatchlistProvider({ children }: { children: React.ReactNode }) {
       (h) => !(h.content_id === contentId && h.content_type === contentType)
     );
     setWatchHistory(updated);
-
-    const supabase = getSupabaseBrowserClient();
-    if (user && supabase) {
-      await supabase
-        .from("watch_history")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("content_id", contentId)
-        .eq("content_type", contentType);
-    } else {
-      localStorage.setItem("cineflix_watch_history", JSON.stringify(updated));
-    }
+    localStorage.setItem("cineverse_watch_history", JSON.stringify(updated));
   };
 
   const clearHistory = async () => {
     setWatchHistory([]);
-    const supabase = getSupabaseBrowserClient();
-    if (user && supabase) {
-      await supabase.from("watch_history").delete().eq("user_id", user.id);
-    } else {
-      localStorage.removeItem("cineflix_watch_history");
-    }
+    localStorage.removeItem("cineverse_watch_history");
   };
 
   return (

@@ -28,7 +28,7 @@ export default function ContentRow({
   const handleScroll = (direction: "left" | "right") => {
     if (rowRef.current) {
       const { scrollLeft, clientWidth } = rowRef.current;
-      const scrollAmount = clientWidth * 0.75;
+      const scrollAmount = clientWidth * 0.8;
       const targetScroll =
         direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
 
@@ -52,34 +52,34 @@ export default function ContentRow({
   }
 
   return (
-    <div className="relative my-6 sm:my-8 px-4 sm:px-6 lg:px-8 space-y-3 group/row">
+    <div className="relative my-10 sm:my-14 px-6 sm:px-8 lg:px-12 space-y-5">
       {/* Row Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-wide">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white tracking-tight">
           {title}
         </h2>
 
         {exploreHref && (
           <Link
             href={exploreHref}
-            className="text-xs sm:text-sm text-zinc-400 hover:text-[#E50914] font-medium transition-colors flex items-center space-x-1"
+            className="text-xs sm:text-sm text-zinc-500 hover:text-white font-medium transition-all duration-300 flex items-center space-x-1 group/link"
           >
-            <span>Explore All</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <span>View All</span>
+            <ChevronRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
           </Link>
         )}
       </div>
 
-      {/* Row Carousel Area */}
-      <div className="relative">
-        {/* Left Arrow Button */}
+      {/* Row Carousel */}
+      <div className="relative group/row">
+        {/* Left Arrow */}
         {showLeftArrow && (
           <button
             onClick={() => handleScroll("left")}
             aria-label="Scroll left"
-            className="absolute -left-3 top-0 bottom-0 z-30 w-10 sm:w-12 bg-black/70 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-sm transition-all rounded-r-md border-r border-zinc-700/50 opacity-0 group-hover/row:opacity-100"
+            className="absolute -left-4 top-0 bottom-0 z-30 w-12 bg-gradient-to-r from-[#080808] via-[#080808]/90 to-transparent hover:via-[#080808]/95 text-white flex items-center justify-center transition-all duration-300 opacity-0 group-hover/row:opacity-100 hover:scale-105"
           >
-            <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+            <ChevronLeft className="w-6 h-6" />
           </button>
         )}
 
@@ -87,13 +87,13 @@ export default function ContentRow({
         <div
           ref={rowRef}
           onScroll={updateArrows}
-          className="flex space-x-3 sm:space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-2"
+          className="flex space-x-3 sm:space-x-4 overflow-x-auto no-scrollbar scroll-smooth py-3"
         >
           {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
+            ? Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex-none w-[160px] sm:w-[200px] md:w-[240px] aspect-[2/3] rounded-md bg-zinc-800 animate-shimmer"
+                  className="flex-none w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] aspect-[2/3] rounded-sm bg-zinc-900/50 animate-shimmer"
                 />
               ))
             : items.map((item) => (
@@ -105,14 +105,14 @@ export default function ContentRow({
               ))}
         </div>
 
-        {/* Right Arrow Button */}
+        {/* Right Arrow */}
         {showRightArrow && (
           <button
             onClick={() => handleScroll("right")}
             aria-label="Scroll right"
-            className="absolute -right-3 top-0 bottom-0 z-30 w-10 sm:w-12 bg-black/70 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-sm transition-all rounded-l-md border-l border-zinc-700/50 opacity-0 group-hover/row:opacity-100"
+            className="absolute -right-4 top-0 bottom-0 z-30 w-12 bg-gradient-to-l from-[#080808] via-[#080808]/90 to-transparent hover:via-[#080808]/95 text-white flex items-center justify-center transition-all duration-300 opacity-0 group-hover/row:opacity-100 hover:scale-105"
           >
-            <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+            <ChevronRight className="w-6 h-6" />
           </button>
         )}
       </div>

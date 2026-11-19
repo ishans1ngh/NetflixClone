@@ -14,7 +14,7 @@ export default function Footer() {
                 <Film className="w-4 h-4 text-white" />
               </div>
               <span className="text-xl font-black tracking-wider text-[#E50914]">
-                CINE<span className="text-white">FLIX</span>
+                CINE<span className="text-white">VERSE</span>
               </span>
             </Link>
             <p className="text-xs text-zinc-400 leading-relaxed">
@@ -75,7 +75,7 @@ export default function Footer() {
             <ul className="space-y-1.5 text-xs text-zinc-400">
               <li>Next.js App Router & TypeScript</li>
               <li>Tailwind CSS & Framer Motion</li>
-              <li>Supabase Auth & PostgreSQL RLS</li>
+              <li>localStorage for demo persistence</li>
               <li>HTML5 Custom Video Engine</li>
             </ul>
           </div>
@@ -83,7 +83,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-zinc-800/60 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
-          <p>© {new Date().getFullYear()} CineFlix Streaming Systems. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} CINEVERSE Streaming Systems. All rights reserved.</p>
           <div className="flex items-center space-x-4">
             <span>Built with modern web standards</span>
             <span>•</span>

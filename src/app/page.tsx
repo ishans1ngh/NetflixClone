@@ -42,12 +42,12 @@ export default async function HomePage() {
     MOCK_MOVIES[0];
 
   return (
-    <div className="relative pb-16 space-y-2 overflow-hidden">
+    <div className="relative pb-16 overflow-hidden">
       {/* 1. Cinematic Hero Banner */}
       <HeroBanner item={heroItem} />
 
-      {/* 2. Content Rows Section (Elevated over hero bottom gradient) */}
-      <div className="relative -mt-16 sm:-mt-24 z-20 space-y-4 sm:space-y-6">
+      {/* 2. Content Rows Section */}
+      <div className="relative -mt-20 sm:-mt-24 lg:-mt-32 z-20 space-y-2 animate-page-in">
         {/* Continue Watching Section (Client component based on user history) */}
         <ContinueWatchingRow />
 

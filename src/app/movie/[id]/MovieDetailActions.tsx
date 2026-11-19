@@ -41,48 +41,48 @@ export default function MovieDetailActions({
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-3 pt-2">
+      <div className="flex flex-wrap items-center gap-4 pt-2">
         {/* Play Button */}
         <Link
           href={`/watch?id=${movie.id}&type=movie`}
-          className="flex items-center space-x-2 bg-[#E50914] hover:bg-[#f40612] text-white px-6 py-3 rounded-md font-bold text-sm sm:text-base shadow-lg shadow-[#E50914]/40 transition-transform active:scale-95"
+          className="flex items-center space-x-3 bg-white hover:bg-zinc-200 text-black px-8 py-4 rounded-sm font-semibold text-base transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl btn-press"
         >
-          <Play className="w-5 h-5 fill-current" />
-          <span>{isPlayable ? "Play Feature Film" : "Play Preview & Trailer"}</span>
+          <Play className="w-5 h-5 fill-black" />
+          <span>{isPlayable ? "Play" : "Play Preview"}</span>
         </Link>
 
-        {/* Watch Trailer Modal Trigger (if available) */}
+        {/* Watch Trailer Modal Trigger */}
         {trailerKey && (
           <button
             onClick={() => setTrailerModalOpen(true)}
-            className="flex items-center space-x-2 bg-zinc-800/80 hover:bg-zinc-700/80 text-white backdrop-blur-md px-5 py-3 rounded-md font-semibold text-sm sm:text-base border border-zinc-700 transition-colors"
+            className="flex items-center space-x-3 bg-zinc-900/60 hover:bg-zinc-800/80 text-white backdrop-blur-md px-8 py-4 rounded-sm font-medium text-base border border-zinc-800/50 transition-all duration-300 hover:scale-105 btn-press"
           >
             <Film className="w-5 h-5 text-zinc-400" />
-            <span>Watch Trailer</span>
+            <span>Trailer</span>
           </button>
         )}
 
         {/* Add/Remove My List */}
         <button
           onClick={handleWatchlistToggle}
-          className={`flex items-center space-x-2 px-5 py-3 rounded-md font-semibold text-sm sm:text-base border transition-all ${
+          className={`flex items-center space-x-3 px-8 py-4 rounded-sm font-medium text-base border transition-all duration-300 hover:scale-105 btn-press ${
             inList
-              ? "bg-zinc-900 border-emerald-500 text-emerald-400"
-              : "bg-black/50 border-zinc-600 text-white hover:border-white"
+              ? "bg-zinc-900/60 border-zinc-700 text-zinc-300 hover:border-zinc-600"
+              : "bg-black/50 border-zinc-800 text-zinc-400 hover:border-zinc-600 hover:text-white"
           }`}
         >
           {inList ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-          <span>{inList ? "In My List" : "Add to My List"}</span>
+          <span>{inList ? "In List" : "My List"}</span>
         </button>
       </div>
 
       {/* Trailer Modal */}
       {trailerModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-4xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-zinc-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="relative w-full max-w-5xl aspect-video bg-black rounded-sm overflow-hidden shadow-2xl border border-zinc-900">
             <button
               onClick={() => setTrailerModalOpen(false)}
-              className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/70 hover:bg-[#E50914] text-white flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 hover:bg-[#E50914] text-white flex items-center justify-center transition-all duration-300"
             >
               <X className="w-5 h-5" />
             </button>
